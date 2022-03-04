@@ -271,6 +271,41 @@ ALTER SEQUENCE public.tamiat_permissions_id_seq OWNED BY public.tamiat_permissio
 
 
 --
+-- Name: tamiat_role_permission; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.tamiat_role_permission (
+    id integer NOT NULL,
+    role_id integer,
+    permission_id integer
+);
+
+
+ALTER TABLE public.tamiat_role_permission OWNER TO postgres;
+
+--
+-- Name: tamiat_role_permission_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.tamiat_role_permission_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tamiat_role_permission_id_seq OWNER TO postgres;
+
+--
+-- Name: tamiat_role_permission_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.tamiat_role_permission_id_seq OWNED BY public.tamiat_role_permission.id;
+
+
+--
 -- Name: tamiat_roles; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -428,6 +463,13 @@ ALTER TABLE ONLY public.tamiat_permissions ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
+-- Name: tamiat_role_permission id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tamiat_role_permission ALTER COLUMN id SET DEFAULT nextval('public.tamiat_role_permission_id_seq'::regclass);
+
+
+--
 -- Name: tamiat_roles id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -505,6 +547,14 @@ ALTER TABLE ONLY public.tamiat_permissions
 
 
 --
+-- Name: tamiat_role_permission tamiat_role_permission_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tamiat_role_permission
+    ADD CONSTRAINT tamiat_role_permission_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: tamiat_roles tamiat_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -549,6 +599,22 @@ ALTER TABLE ONLY public.xx
 --
 
 CREATE UNIQUE INDEX schema_migration_version_idx ON public.schema_migration USING btree (version);
+
+
+--
+-- Name: tamiat_role_permission tamiat_role_permission_permission_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tamiat_role_permission
+    ADD CONSTRAINT tamiat_role_permission_permission_id_fkey FOREIGN KEY (permission_id) REFERENCES public.tamiat_permissions(id);
+
+
+--
+-- Name: tamiat_role_permission tamiat_role_permission_role_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tamiat_role_permission
+    ADD CONSTRAINT tamiat_role_permission_role_id_fkey FOREIGN KEY (role_id) REFERENCES public.tamiat_roles(id);
 
 
 --

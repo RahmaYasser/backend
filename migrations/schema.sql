@@ -237,6 +237,40 @@ CREATE TABLE public.schema_migration (
 ALTER TABLE public.schema_migration OWNER TO postgres;
 
 --
+-- Name: tamiat_permissions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.tamiat_permissions (
+    id integer NOT NULL,
+    name character varying(60)
+);
+
+
+ALTER TABLE public.tamiat_permissions OWNER TO postgres;
+
+--
+-- Name: tamiat_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.tamiat_permissions_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tamiat_permissions_id_seq OWNER TO postgres;
+
+--
+-- Name: tamiat_permissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.tamiat_permissions_id_seq OWNED BY public.tamiat_permissions.id;
+
+
+--
 -- Name: tamiat_roles; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -387,6 +421,13 @@ ALTER TABLE ONLY public.contenttype ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
+-- Name: tamiat_permissions id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tamiat_permissions ALTER COLUMN id SET DEFAULT nextval('public.tamiat_permissions_id_seq'::regclass);
+
+
+--
 -- Name: tamiat_roles id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -453,6 +494,14 @@ ALTER TABLE ONLY public.blogs
 
 ALTER TABLE ONLY public.contenttype
     ADD CONSTRAINT contenttype_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tamiat_permissions tamiat_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tamiat_permissions
+    ADD CONSTRAINT tamiat_permissions_pkey PRIMARY KEY (id);
 
 
 --

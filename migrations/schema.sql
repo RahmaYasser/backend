@@ -155,6 +155,41 @@ ALTER SEQUENCE public.authority_user_roles_id_seq OWNED BY public.authority_user
 
 
 --
+-- Name: blogs; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.blogs (
+    id integer NOT NULL,
+    blog_name character varying(100) NOT NULL,
+    description character varying(100) NOT NULL
+);
+
+
+ALTER TABLE public.blogs OWNER TO postgres;
+
+--
+-- Name: blogs_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.blogs_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.blogs_id_seq OWNER TO postgres;
+
+--
+-- Name: blogs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.blogs_id_seq OWNED BY public.blogs.id;
+
+
+--
 -- Name: contenttype; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -202,6 +237,40 @@ CREATE TABLE public.schema_migration (
 ALTER TABLE public.schema_migration OWNER TO postgres;
 
 --
+-- Name: tamiat_roles; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.tamiat_roles (
+    id integer NOT NULL,
+    name character varying(20)
+);
+
+
+ALTER TABLE public.tamiat_roles OWNER TO postgres;
+
+--
+-- Name: tamiat_roles_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.tamiat_roles_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.tamiat_roles_id_seq OWNER TO postgres;
+
+--
+-- Name: tamiat_roles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.tamiat_roles_id_seq OWNED BY public.tamiat_roles.id;
+
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -241,40 +310,6 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
--- Name: x; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.x (
-    id integer NOT NULL,
-    title character varying(100) NOT NULL
-);
-
-
-ALTER TABLE public.x OWNER TO postgres;
-
---
--- Name: x_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.x_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.x_id_seq OWNER TO postgres;
-
---
--- Name: x_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.x_id_seq OWNED BY public.x.id;
-
-
---
 -- Name: xx; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -310,41 +345,6 @@ ALTER SEQUENCE public.xx_id_seq OWNED BY public.xx.id;
 
 
 --
--- Name: xxx; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE public.xxx (
-    title character varying(100) NOT NULL,
-    description character varying(100) NOT NULL,
-    id integer NOT NULL
-);
-
-
-ALTER TABLE public.xxx OWNER TO postgres;
-
---
--- Name: xxx_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE public.xxx_id_seq
-    AS integer
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE public.xxx_id_seq OWNER TO postgres;
-
---
--- Name: xxx_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE public.xxx_id_seq OWNED BY public.xxx.id;
-
-
---
 -- Name: authority_permissions id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -373,10 +373,24 @@ ALTER TABLE ONLY public.authority_user_roles ALTER COLUMN id SET DEFAULT nextval
 
 
 --
+-- Name: blogs id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blogs ALTER COLUMN id SET DEFAULT nextval('public.blogs_id_seq'::regclass);
+
+
+--
 -- Name: contenttype id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.contenttype ALTER COLUMN id SET DEFAULT nextval('public.contenttype_id_seq'::regclass);
+
+
+--
+-- Name: tamiat_roles id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tamiat_roles ALTER COLUMN id SET DEFAULT nextval('public.tamiat_roles_id_seq'::regclass);
 
 
 --
@@ -387,24 +401,10 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 
 
 --
--- Name: x id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.x ALTER COLUMN id SET DEFAULT nextval('public.x_id_seq'::regclass);
-
-
---
 -- Name: xx id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.xx ALTER COLUMN id SET DEFAULT nextval('public.xx_id_seq'::regclass);
-
-
---
--- Name: xxx id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.xxx ALTER COLUMN id SET DEFAULT nextval('public.xxx_id_seq'::regclass);
 
 
 --
@@ -440,11 +440,27 @@ ALTER TABLE ONLY public.authority_user_roles
 
 
 --
+-- Name: blogs blogs_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.blogs
+    ADD CONSTRAINT blogs_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: contenttype contenttype_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.contenttype
     ADD CONSTRAINT contenttype_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tamiat_roles tamiat_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tamiat_roles
+    ADD CONSTRAINT tamiat_roles_pkey PRIMARY KEY (id);
 
 
 --
@@ -472,27 +488,11 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: x x_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.x
-    ADD CONSTRAINT x_pkey PRIMARY KEY (id);
-
-
---
 -- Name: xx xx_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.xx
     ADD CONSTRAINT xx_pkey PRIMARY KEY (id);
-
-
---
--- Name: xxx xxx_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY public.xxx
-    ADD CONSTRAINT xxx_pkey PRIMARY KEY (id);
 
 
 --

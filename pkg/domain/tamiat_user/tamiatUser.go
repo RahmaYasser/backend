@@ -7,3 +7,12 @@ type TamiatUser struct {
 	Password string
 	RoleId   int
 }
+
+type TamiatUserRepository interface {
+	Login(tUser TamiatUser) (string, error)
+	Create(tUserObj TamiatUser) error
+	ReadAll() ([]TamiatUser, error)
+	ReadUserByID()
+	Update()
+	Delete()
+}

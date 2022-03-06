@@ -36,7 +36,11 @@ func (r TamiatUserRepositoryDb) ReadUserByID(id int) error {
 	err := row.Scan(&tamiatUser.Id, &tamiatUser.CreatedAt, &tamiatUser.UpdtedAt, &tamiatUser.DeletedAt, &tamiatUser.Name, &tamiatUser.Email, &tamiatUser.RoleId)
 	return err
 }
-
+func (r TamiatUserRepositoryDb) Update(tUserObj TamiatUser) error {
+	sqlStatement := `UPDATE tamiat_users SET name = $1,role_id = $2 WHERE id = $3;`
+	_, err := r.db.Exec(sqlStatement, tUserObj.Name, tUserObj.RoleId, tUserObj.Id)
+	return err
+}
 func NewTamiatUserRepositoryDb(db *sql.DB) TamiatUserRepositoryDb {
 	return TamiatUserRepositoryDb{db}
 }

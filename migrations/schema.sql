@@ -348,6 +348,22 @@ ALTER TABLE ONLY public.contenttype
 
 
 --
+-- Name: tamiat_permissions unique_permissions_name; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tamiat_permissions
+    ADD CONSTRAINT unique_permissions_name UNIQUE (name);
+
+
+--
+-- Name: tamiat_roles unique_roles_name; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.tamiat_roles
+    ADD CONSTRAINT unique_roles_name UNIQUE (name);
+
+
+--
 -- Name: users users_email_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 

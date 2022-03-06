@@ -19,5 +19,5 @@ type TamiatUserRepository interface {
 	ReadAll() ([]TamiatUser, error)
 	ReadUserByID(id int) error
 	Update(tUserObj TamiatUser) error
-	Delete()
+	Delete(id int) error
 }

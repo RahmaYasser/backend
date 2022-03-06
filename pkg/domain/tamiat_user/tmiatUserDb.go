@@ -2,12 +2,26 @@ package tamiat_user
 
 import (
 	"database/sql"
+	"errors"
+	"github.com/tamiat/backend/pkg/errs"
+	"gorm.io/gorm"
 )
 
 type TamiatUserRepositoryDb struct {
-	db *sql.DB
+	db  *sql.DB
+	gDb *gorm.DB
 }
 
+func (r TamiatUserRepositoryDb) Login(userObj TamiatUser) (string, error) {
+	var retrievedUsr TamiatUser
+	if err := r.gDb.Where("email = ?", userObj.Email).First(&retrievedUsr).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return "", errs.ErrRecordNotFound
+		}
+		return "", errs.ErrDb
+	}
+	return retrievedUsr.Password, nil
+}
 func (r TamiatUserRepositoryDb) Create(tUserObj TamiatUser) error {
 	_, err := r.db.Exec(`INSERT INTO tamiat_users(name,email,password,role_id) VALUES ($1,$2,$3,$4)`, tUserObj.Name, tUserObj.Email, tUserObj.Password, tUserObj.RoleId)
 	return err
@@ -47,6 +61,6 @@ func (r TamiatUserRepositoryDb) Delete(id int) error {
 	return err
 }
 
-func NewTamiatUserRepositoryDb(db *sql.DB) TamiatUserRepositoryDb {
-	return TamiatUserRepositoryDb{db}
+func NewTamiatUserRepositoryDb(db *sql.DB, gDb *gorm.DB) TamiatUserRepositoryDb {
+	return TamiatUserRepositoryDb{db, gDb}
 }

@@ -41,6 +41,12 @@ func (r TamiatUserRepositoryDb) Update(tUserObj TamiatUser) error {
 	_, err := r.db.Exec(sqlStatement, tUserObj.Name, tUserObj.RoleId, tUserObj.Id)
 	return err
 }
+func (r TamiatUserRepositoryDb) Delete(id int) error {
+	sqlStatement := `DELETE FROM tamiat_users WHERE id = $1;`
+	_, err := r.db.Exec(sqlStatement, id)
+	return err
+}
+
 func NewTamiatUserRepositoryDb(db *sql.DB) TamiatUserRepositoryDb {
 	return TamiatUserRepositoryDb{db}
 }

@@ -10,8 +10,6 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-
-	"github.com/tamiat/backend/pkg/domain/user"
 )
 
 func TokenVerifyMiddleWare() gin.HandlerFunc {
@@ -47,12 +45,12 @@ func TokenVerifyMiddleWare() gin.HandlerFunc {
 
 	}
 }
-func GenerateToken(user user.User) (string, error) {
+func GenerateToken(email string) (string, error) {
 	var err error
 	secret := fmt.Sprintf("%s", os.Getenv("JWT_SECRET"))
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		//TODO change claims
-		"email": user.Email,
+		"email": email,
 		"iss":   "course",
 		"exp":   time.Now().Add(time.Hour * 2).Unix(),
 	})

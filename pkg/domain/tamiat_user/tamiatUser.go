@@ -8,16 +8,17 @@ type TamiatUser struct {
 	UpdtedAt  timestamp.Timestamp
 	DeletedAt timestamp.Timestamp
 	Name      string
-	Email     string
+	Email     string `json:"email" form:"email" binding:"required,email"`
 	Password  string
 	RoleId    int
 }
 
 type TamiatUserRepository interface {
 	Login(tUser TamiatUser) (string, error)
-	Create(tUserObj TamiatUser) error
+	Create(tUserObj TamiatUser) (int, error)
 	ReadAll() ([]TamiatUser, error)
-	ReadUserByID(id int) error
+	ReadUserByID(id int) (TamiatUser, error)
 	Update(tUserObj TamiatUser) error
 	Delete(id int) error
+	GetRoleId(name string) (int, error)
 }

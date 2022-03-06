@@ -140,7 +140,7 @@ func (receiver UserHandlers) Login(ctx *gin.Context) {
 		return
 	}
 	//generating token
-	token, err := middleware.GenerateToken(userObj)
+	token, err := middleware.GenerateToken(userObj.Email)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": errs.ErrTokenErr.Error()})
 		return

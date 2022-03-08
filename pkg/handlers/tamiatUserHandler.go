@@ -14,12 +14,11 @@ import (
 type TamiatUserHandlers struct {
 	Service service.TamiatUserService
 }
-
 type CreateTUser struct {
 	Email    string `json:"email" form:"email" binding:"required,email"`
 	Password string `json:"password" form:"password" binding:"required"`
 	Role     string `json:"role_name" form:"role name" binding:"required"`
-	Name     string `json:"role" form:"role" binding:"required"`
+	Name     string `json:"name" form:"name" binding:"required"`
 }
 type UpdateUsr struct {
 	Name string `json:"role" form:"role" binding:"required"`
@@ -80,6 +79,20 @@ func (receiver TamiatUserHandlers) Login(ctx *gin.Context) {
 	jwtObj := JWT{Token: token}
 	ctx.JSON(http.StatusOK, jwtObj)
 }
+
+//
+// @Summary CreateUser endpoint
+// @Description Provide user info to create new user. Admins only can use this endpoint.
+// @Consume application/x-www-form-urlencoded
+// @Produce application/json
+// @Param email formData string true "Email"
+// @Param password formData string true "Password"
+// @Param role_name formData string true "role name"
+// @Param name formData string true "name"
+// @Success 200 {object} handlers.JWT
+// @Failure 400  {object}  errs.ErrResponse "Bad Request"
+// @Failure 500  {object}  errs.ErrResponse "Internal server error"
+// @Router /login [post]
 func (receiver TamiatUserHandlers) Create(ctx *gin.Context) {
 	var userObj tamiat_user.TamiatUser
 	var createRequestData CreateTUser

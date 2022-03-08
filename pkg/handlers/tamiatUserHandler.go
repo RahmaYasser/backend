@@ -144,6 +144,17 @@ func (receiver TamiatUserHandlers) ReadAll(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, allUsers)
 }
+
+//
+// @Summary ReadUserByID endpoint
+// @Description Admins only can use this endpoint.
+// @Accept application/json
+// @Produce application/json
+// @Param  id path int true "user ID"
+// @Success 200 {object} tamiat_user.TamiatUser
+// @Failure 400  {object}  errs.ErrResponse "Bad Request"
+// @Failure 500  {object}  errs.ErrResponse "Internal server error"
+// @Router /login [post]
 func (receiver TamiatUserHandlers) ReadUserByID(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
@@ -157,6 +168,19 @@ func (receiver TamiatUserHandlers) ReadUserByID(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, usrObj)
 }
+
+//
+// @Summary Update name or role endpoint
+// @Description Admins only can use this endpoint.
+// @Consume application/x-www-form-urlencoded
+// @Produce application/json
+// @Param  id path int true "user ID"
+// @Param name formData string true "name"
+// @Param role_name formData string true "role name"
+// @Success 200 int id
+// @Failure 400  {object}  errs.ErrResponse "Bad Request"
+// @Failure 500  {object}  errs.ErrResponse "Internal server error"
+// @Router /login [post]
 func (receiver TamiatUserHandlers) Update(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {

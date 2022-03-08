@@ -208,6 +208,18 @@ func (receiver TamiatUserHandlers) Update(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, gin.H{"id": id})
 }
+
+//
+// @Summary ResetPassword endpoint
+// @Description Admins only can use this endpoint.
+// @Consume application/x-www-form-urlencoded
+// @Produce application/json
+// @Param  id path int true "user ID"
+// @Param password formData string true "password"
+// @Success 200 int id
+// @Failure 400  {object}  errs.ErrResponse "Bad Request"
+// @Failure 500  {object}  errs.ErrResponse "Internal server error"
+// @Router /login [post]
 func (receiver TamiatUserHandlers) ResetPassword(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
@@ -235,6 +247,7 @@ func (receiver TamiatUserHandlers) ResetPassword(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, gin.H{"id": id})
 }
+
 func (receiver TamiatUserHandlers) Delete(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {

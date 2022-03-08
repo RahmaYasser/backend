@@ -27,7 +27,7 @@ func GetDbConnection() (*gorm.DB, *sql.DB) {
 	}
 	log.Println("connected to db ")
 	log.Println("pinged db")
-	SeedDB(sqlDB)
+	//SeedDB(sqlDB)
 	return db, sqlDB
 }
 func InitAuthority(db *gorm.DB) *authority.Authority {

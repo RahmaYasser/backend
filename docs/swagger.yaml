@@ -25,6 +25,11 @@ definitions:
       table_id:
         type: string
     type: object
+  handlers.IDResponse:
+    properties:
+      id:
+        type: integer
+    type: object
   handlers.JWT:
     properties:
       token:
@@ -496,8 +501,8 @@ paths:
       summary: Signup endpoint
   /tamiatUser/create:
     post:
-      description: Provide user info to create new user. Admins only can use this
-        endpoint.
+      description: role name should be one of the following(Admin, Editor, Author,
+        Contributor, Subscriber. Admins only can use this endpoint.
       parameters:
       - description: Email
         in: formData
@@ -525,7 +530,7 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/tamiat_user.TamiatUser'
+            $ref: '#/definitions/handlers.IDResponse'
         "400":
           description: Bad Request
           schema:
@@ -552,9 +557,13 @@ paths:
         "200":
           description: OK
           schema:
-            type: int
+            $ref: '#/definitions/handlers.IDResponse'
         "400":
           description: Bad Request
+          schema:
+            $ref: '#/definitions/errs.ErrResponse'
+        "404":
+          description: No users found
           schema:
             $ref: '#/definitions/errs.ErrResponse'
         "500":
@@ -576,6 +585,10 @@ paths:
             items:
               $ref: '#/definitions/tamiat_user.TamiatUser'
             type: array
+        "404":
+          description: No users found
+          schema:
+            $ref: '#/definitions/errs.ErrResponse'
         "500":
           description: Internal server error
           schema:
@@ -641,6 +654,10 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/errs.ErrResponse'
+        "404":
+          description: No user found
+          schema:
+            $ref: '#/definitions/errs.ErrResponse'
         "500":
           description: Internal server error
           schema:
@@ -655,9 +672,9 @@ paths:
         name: id
         required: true
         type: integer
-      - description: password
+      - description: new_pass
         in: formData
-        name: password
+        name: new_pass
         required: true
         type: string
       produces:
@@ -666,9 +683,13 @@ paths:
         "200":
           description: OK
           schema:
-            type: int
+            $ref: '#/definitions/handlers.IDResponse'
         "400":
           description: Bad Request
+          schema:
+            $ref: '#/definitions/errs.ErrResponse'
+        "404":
+          description: No users found
           schema:
             $ref: '#/definitions/errs.ErrResponse'
         "500":
@@ -701,9 +722,13 @@ paths:
         "200":
           description: OK
           schema:
-            type: int
+            $ref: '#/definitions/handlers.IDResponse'
         "400":
           description: Bad Request
+          schema:
+            $ref: '#/definitions/errs.ErrResponse'
+        "404":
+          description: No users found
           schema:
             $ref: '#/definitions/errs.ErrResponse'
         "500":

@@ -643,7 +643,7 @@ const docTemplate_swagger = `{
         },
         "/tamiatUser/create": {
             "post": {
-                "description": "Provide user info to create new user. Admins only can use this endpoint.",
+                "description": "role name should be one of the following(Admin, Editor, Author, Contributor, Subscriber. Admins only can use this endpoint.",
                 "produces": [
                     "application/json"
                 ],
@@ -682,7 +682,7 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/tamiat_user.TamiatUser"
+                            "$ref": "#/definitions/handlers.IDResponse"
                         }
                     },
                     "400": {
@@ -723,11 +723,17 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "int"
+                            "$ref": "#/definitions/handlers.IDResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "No users found",
                         "schema": {
                             "$ref": "#/definitions/errs.ErrResponse"
                         }
@@ -759,6 +765,12 @@ const docTemplate_swagger = `{
                             "items": {
                                 "$ref": "#/definitions/tamiat_user.TamiatUser"
                             }
+                        }
+                    },
+                    "404": {
+                        "description": "No users found",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrResponse"
                         }
                     },
                     "500": {
@@ -859,6 +871,12 @@ const docTemplate_swagger = `{
                             "$ref": "#/definitions/errs.ErrResponse"
                         }
                     },
+                    "404": {
+                        "description": "No user found",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrResponse"
+                        }
+                    },
                     "500": {
                         "description": "Internal server error",
                         "schema": {
@@ -885,8 +903,8 @@ const docTemplate_swagger = `{
                     },
                     {
                         "type": "string",
-                        "description": "password",
-                        "name": "password",
+                        "description": "new_pass",
+                        "name": "new_pass",
                         "in": "formData",
                         "required": true
                     }
@@ -895,11 +913,17 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "int"
+                            "$ref": "#/definitions/handlers.IDResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "No users found",
                         "schema": {
                             "$ref": "#/definitions/errs.ErrResponse"
                         }
@@ -947,11 +971,17 @@ const docTemplate_swagger = `{
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "int"
+                            "$ref": "#/definitions/handlers.IDResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "No users found",
                         "schema": {
                             "$ref": "#/definitions/errs.ErrResponse"
                         }
@@ -1005,6 +1035,14 @@ const docTemplate_swagger = `{
             "properties": {
                 "table_id": {
                     "type": "string"
+                }
+            }
+        },
+        "handlers.IDResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
                 }
             }
         },

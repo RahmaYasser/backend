@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"database/sql"
 	"github.com/gin-gonic/gin"
 	"github.com/tamiat/backend/pkg/domain/tamiat_user"
 	"github.com/tamiat/backend/pkg/errs"
@@ -17,15 +18,18 @@ type TamiatUserHandlers struct {
 type CreateTUser struct {
 	Email    string `json:"email" form:"email" binding:"required,email"`
 	Password string `json:"password" form:"password" binding:"required"`
-	Role     string `json:"role_name" form:"role name" binding:"required"`
+	Role     string `json:"role_name" form:"role_name" binding:"required"`
 	Name     string `json:"name" form:"name" binding:"required"`
 }
 type UpdateUsr struct {
-	Name string `json:"role" form:"role" binding:"required"`
-	Role string `json:"role_name" form:"role name" binding:"required"`
+	Name string `json:"role" form:"name" binding:"required"`
+	Role string `json:"role_name" form:"role_name" binding:"required"`
 }
 type ResetPass struct {
-	NewPass string `json:"new_pass" form:"role" binding:"required"`
+	NewPass string `json:"new_pass" form:"new_pass" binding:"required"`
+}
+type IDResponse struct {
+	Id int `json:"id" form:"id"`
 }
 
 //
@@ -82,14 +86,14 @@ func (receiver TamiatUserHandlers) Login(ctx *gin.Context) {
 
 //
 // @Summary Create Tamiat User endpoint
-// @Description Provide user info to create new user. Admins only can use this endpoint.
+// @Description role name should be one of the following(Admin, Editor, Author, Contributor, Subscriber. Admins only can use this endpoint.
 // @Consume application/x-www-form-urlencoded
 // @Produce application/json
 // @Param email formData string true "Email"
 // @Param password formData string true "Password"
 // @Param role_name formData string true "role name"
 // @Param name formData string true "name"
-// @Success 200 {object} tamiat_user.TamiatUser
+// @Success 200 {object} handlers.IDResponse
 // @Failure 400  {object}  errs.ErrResponse "Bad Request"
 // @Failure 500  {object}  errs.ErrResponse "Internal server error"
 // @Router /tamiatUser/create [post]
@@ -134,12 +138,17 @@ func (receiver TamiatUserHandlers) Create(ctx *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Success 200 {array} tamiat_user.TamiatUser
+// @Success 404 {object} errs.ErrResponse "No users found"
 // @Failure 500  {object}  errs.ErrResponse "Internal server error"
 // @Router /tamiatUser/index [get]
 func (receiver TamiatUserHandlers) ReadAll(ctx *gin.Context) {
 	allUsers, err := receiver.Service.ReadAll()
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	if allUsers == nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": errs.ErrRecordNotFound.Error()})
 		return
 	}
 	ctx.JSON(http.StatusOK, allUsers)
@@ -153,6 +162,7 @@ func (receiver TamiatUserHandlers) ReadAll(ctx *gin.Context) {
 // @Param  id path int true "user ID"
 // @Success 200 {object} tamiat_user.TamiatUser
 // @Failure 400  {object}  errs.ErrResponse "Bad Request"
+// @Success 404 {object} errs.ErrResponse "No user found"
 // @Failure 500  {object}  errs.ErrResponse "Internal server error"
 // @Router /tamiatUser/read/{id} [get]
 func (receiver TamiatUserHandlers) ReadUserByID(ctx *gin.Context) {
@@ -162,6 +172,10 @@ func (receiver TamiatUserHandlers) ReadUserByID(ctx *gin.Context) {
 		return
 	}
 	usrObj, err := receiver.Service.ReadUserByID(id)
+	if err == sql.ErrNoRows {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": errs.ErrRecordNotFound.Error()})
+		return
+	}
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -177,8 +191,9 @@ func (receiver TamiatUserHandlers) ReadUserByID(ctx *gin.Context) {
 // @Param  id path int true "user ID"
 // @Param name formData string true "name"
 // @Param role_name formData string true "role name"
-// @Success 200 int id
+// @Success 200 {object} handlers.IDResponse
 // @Failure 400  {object}  errs.ErrResponse "Bad Request"
+// @Success 404 {object} errs.ErrResponse "No users found"
 // @Failure 500  {object}  errs.ErrResponse "Internal server error"
 // @Router /tamiatUser/update/{id} [put]
 func (receiver TamiatUserHandlers) Update(ctx *gin.Context) {
@@ -202,6 +217,10 @@ func (receiver TamiatUserHandlers) Update(ctx *gin.Context) {
 		return
 	}
 	err = receiver.Service.Update(usrObj)
+	if err == sql.ErrNoRows {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": errs.ErrRecordNotFound.Error()})
+		return
+	}
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -215,9 +234,10 @@ func (receiver TamiatUserHandlers) Update(ctx *gin.Context) {
 // @Consume application/x-www-form-urlencoded
 // @Produce application/json
 // @Param  id path int true "user ID"
-// @Param password formData string true "password"
-// @Success 200 int id
+// @Param new_pass formData string true "new_pass"
+// @Success 200 {object} handlers.IDResponse
 // @Failure 400  {object}  errs.ErrResponse "Bad Request"
+// @Success 404 {object} errs.ErrResponse "No users found"
 // @Failure 500  {object}  errs.ErrResponse "Internal server error"
 // @Router /tamiatUser/resetpass/{id} [put]
 func (receiver TamiatUserHandlers) ResetPassword(ctx *gin.Context) {
@@ -231,7 +251,7 @@ func (receiver TamiatUserHandlers) ResetPassword(ctx *gin.Context) {
 	var RequestResetPass ResetPass
 	err = ctx.ShouldBind(&RequestResetPass)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": errs.ErrParsingID})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 	hash, err := bcrypt.GenerateFromPassword([]byte(RequestResetPass.NewPass), 10)
@@ -241,6 +261,10 @@ func (receiver TamiatUserHandlers) ResetPassword(ctx *gin.Context) {
 	}
 	usrObj.Password = string(hash)
 	err = receiver.Service.ResetPassword(usrObj)
+	if err == sql.ErrNoRows {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": errs.ErrRecordNotFound.Error()})
+		return
+	}
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -254,8 +278,9 @@ func (receiver TamiatUserHandlers) ResetPassword(ctx *gin.Context) {
 // @Accept application/json
 // @Produce application/json
 // @Param  id path int true "user ID"
-// @Success 200 int id
+// @Success 200 {object} handlers.IDResponse
 // @Failure 400  {object}  errs.ErrResponse "Bad Request"
+// @Success 404 {object} errs.ErrResponse "No users found"
 // @Failure 500  {object}  errs.ErrResponse "Internal server error"
 // @Router /tamiatUser/delete/{id} [delete]
 func (receiver TamiatUserHandlers) Delete(ctx *gin.Context) {
@@ -265,6 +290,10 @@ func (receiver TamiatUserHandlers) Delete(ctx *gin.Context) {
 		return
 	}
 	err = receiver.Service.Delete(id)
+	if err == sql.ErrNoRows {
+		ctx.JSON(http.StatusNotFound, gin.H{"error": errs.ErrRecordNotFound.Error()})
+		return
+	}
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

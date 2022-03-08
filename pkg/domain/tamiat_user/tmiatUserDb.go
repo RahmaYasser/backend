@@ -41,6 +41,9 @@ func (r TamiatUserRepositoryDb) ReadAll() ([]TamiatUser, error) {
 	defer rows.Close()
 	for rows.Next() {
 		err = rows.Scan(&tamiatUser.Id, &tamiatUser.CreatedAt, &tamiatUser.UpdatedAt, &tamiatUser.DeletedAt, &tamiatUser.Name, &tamiatUser.Email, &tamiatUser.RoleId)
+		if err != nil {
+			return nil, err
+		}
 		tamiatUserArr = append(tamiatUserArr, tamiatUser)
 	}
 	err = rows.Err()
@@ -53,21 +56,36 @@ func (r TamiatUserRepositoryDb) ReadUserByID(id int) (TamiatUser, error) {
 	row := r.db.QueryRow(`SELECT id,created_at,updated_at,deleted_at,name,email,role_id FROM tamiat_users WHERE id=$1`, id)
 	var tamiatUser TamiatUser
 	err := row.Scan(&tamiatUser.Id, &tamiatUser.CreatedAt, &tamiatUser.UpdatedAt, &tamiatUser.DeletedAt, &tamiatUser.Name, &tamiatUser.Email, &tamiatUser.RoleId)
+	if err == sql.ErrNoRows {
+		return tamiatUser, sql.ErrNoRows
+	}
 	return tamiatUser, err
 }
 func (r TamiatUserRepositoryDb) Update(tUserObj TamiatUser) error {
-	sqlStatement := `UPDATE tamiat_users SET name = $1,role_id = $2 WHERE id = $3;`
-	_, err := r.db.Exec(sqlStatement, tUserObj.Name, tUserObj.RoleId, tUserObj.Id)
+	row := r.db.QueryRow(`UPDATE tamiat_users SET name = $1,role_id = $2 WHERE id = $3 RETURNING id;`, tUserObj.Name, tUserObj.RoleId, tUserObj.Id)
+	var id int
+	err := row.Scan(&id)
+	if err == sql.ErrNoRows {
+		return sql.ErrNoRows
+	}
 	return err
 }
 func (r TamiatUserRepositoryDb) ResetPassword(tUserObj TamiatUser) error {
-	sqlStatement := `UPDATE tamiat_users SET password = $1 WHERE id = $2;`
-	_, err := r.db.Exec(sqlStatement, tUserObj.Password, tUserObj.Id)
+	row := r.db.QueryRow(`UPDATE tamiat_users SET password = $1 WHERE id = $2 RETURNING id;`, tUserObj.Password, tUserObj.Id)
+	var id int
+	err := row.Scan(&id)
+	if err == sql.ErrNoRows {
+		return sql.ErrNoRows
+	}
 	return err
 }
 func (r TamiatUserRepositoryDb) Delete(id int) error {
-	sqlStatement := `DELETE FROM tamiat_users WHERE id = $1;`
-	_, err := r.db.Exec(sqlStatement, id)
+	row := r.db.QueryRow(`DELETE FROM tamiat_users WHERE id = $1 RETURNING id;`, id)
+	var tmpId int
+	err := row.Scan(&tmpId)
+	if err == sql.ErrNoRows {
+		return sql.ErrNoRows
+	}
 	return err
 }
 func (r TamiatUserRepositoryDb) GetRoleId(name string) (int, error) {

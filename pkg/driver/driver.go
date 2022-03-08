@@ -9,7 +9,6 @@ import (
 	"os"
 
 	"github.com/harranali/authority"
-
 )
 
 // GetDbConnection is used to connect to postgres database
@@ -28,9 +27,10 @@ func GetDbConnection() (*gorm.DB, *sql.DB) {
 	}
 	log.Println("connected to db ")
 	log.Println("pinged db")
+	//SeedDB(sqlDB)
 	return db, sqlDB
 }
-func InitAuthority(db *gorm.DB) *authority.Authority{
+func InitAuthority(db *gorm.DB) *authority.Authority {
 	return authority.New(authority.Options{
 		TablesPrefix: "authority_",
 		DB:           db,

@@ -1,0 +1,1 @@
+DROP TABLE tamiat_users;

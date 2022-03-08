@@ -1,0 +1,1 @@
+ALTER TABLE tamiat_permissions ADD CONSTRAINT unique_permissions_name UNIQUE (name);

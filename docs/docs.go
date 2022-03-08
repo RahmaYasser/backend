@@ -640,6 +640,330 @@ const docTemplate_swagger = `{
                     }
                 }
             }
+        },
+        "/tamiatUser/create": {
+            "post": {
+                "description": "Provide user info to create new user. Admins only can use this endpoint.",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Create Tamiat User endpoint",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Email",
+                        "name": "email",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Password",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "role name",
+                        "name": "role_name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "name",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tamiat_user.TamiatUser"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/tamiatUser/delete/{id}": {
+            "delete": {
+                "description": "Admins only can use this endpoint.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Delete Tamiat endpoint",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "user ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "int"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/tamiatUser/index": {
+            "get": {
+                "description": "Admins only can use this endpoint.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "ReadAll Tamiat Users endpoint",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/tamiat_user.TamiatUser"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/tamiatUser/login": {
+            "post": {
+                "description": "Provide email and password to login, response is JWT",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Login endpoint",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Email",
+                        "name": "email",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Password",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.JWT"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorizes",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "User not found",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/tamiatUser/read/{id}": {
+            "get": {
+                "description": "Admins only can use this endpoint.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "ReadUserByID  for Tamiat User endpoint",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "user ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/tamiat_user.TamiatUser"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/tamiatUser/resetpass/{id}": {
+            "put": {
+                "description": "Admins only can use this endpoint.",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "ResetPassword Tamiat endpoint",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "user ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "password",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "int"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/tamiatUser/update/{id}": {
+            "put": {
+                "description": "Admins only can use this endpoint.",
+                "produces": [
+                    "application/json"
+                ],
+                "summary": "Update name or role for Tamiat User endpoint",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "user ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "name",
+                        "name": "name",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "role name",
+                        "name": "role_name",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "int"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "$ref": "#/definitions/errs.ErrResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -713,6 +1037,38 @@ const docTemplate_swagger = `{
                     "type": "integer"
                 },
                 "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "tamiat_user.TamiatUser": {
+            "type": "object",
+            "required": [
+                "email"
+            ],
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                },
+                "role_id": {
+                    "type": "integer"
+                },
+                "updated_at": {
                     "type": "string"
                 }
             }

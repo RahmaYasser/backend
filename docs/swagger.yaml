@@ -46,6 +46,27 @@ definitions:
     required:
     - name
     type: object
+  tamiat_user.TamiatUser:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      password:
+        type: string
+      role_id:
+        type: integer
+      updated_at:
+        type: string
+    required:
+    - email
+    type: object
   user.User:
     properties:
       email:
@@ -473,6 +494,223 @@ paths:
           schema:
             $ref: '#/definitions/errs.ErrResponse'
       summary: Signup endpoint
+  /tamiatUser/create:
+    post:
+      description: Provide user info to create new user. Admins only can use this
+        endpoint.
+      parameters:
+      - description: Email
+        in: formData
+        name: email
+        required: true
+        type: string
+      - description: Password
+        in: formData
+        name: password
+        required: true
+        type: string
+      - description: role name
+        in: formData
+        name: role_name
+        required: true
+        type: string
+      - description: name
+        in: formData
+        name: name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tamiat_user.TamiatUser'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errs.ErrResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/errs.ErrResponse'
+      summary: Create Tamiat User endpoint
+  /tamiatUser/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Admins only can use this endpoint.
+      parameters:
+      - description: user ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: int
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errs.ErrResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/errs.ErrResponse'
+      summary: Delete Tamiat endpoint
+  /tamiatUser/index:
+    get:
+      consumes:
+      - application/json
+      description: Admins only can use this endpoint.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/tamiat_user.TamiatUser'
+            type: array
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/errs.ErrResponse'
+      summary: ReadAll Tamiat Users endpoint
+  /tamiatUser/login:
+    post:
+      description: Provide email and password to login, response is JWT
+      parameters:
+      - description: Email
+        in: formData
+        name: email
+        required: true
+        type: string
+      - description: Password
+        in: formData
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handlers.JWT'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errs.ErrResponse'
+        "401":
+          description: Unauthorizes
+          schema:
+            $ref: '#/definitions/errs.ErrResponse'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/errs.ErrResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/errs.ErrResponse'
+      summary: Login endpoint
+  /tamiatUser/read/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Admins only can use this endpoint.
+      parameters:
+      - description: user ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tamiat_user.TamiatUser'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errs.ErrResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/errs.ErrResponse'
+      summary: ReadUserByID  for Tamiat User endpoint
+  /tamiatUser/resetpass/{id}:
+    put:
+      description: Admins only can use this endpoint.
+      parameters:
+      - description: user ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: password
+        in: formData
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: int
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errs.ErrResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/errs.ErrResponse'
+      summary: ResetPassword Tamiat endpoint
+  /tamiatUser/update/{id}:
+    put:
+      description: Admins only can use this endpoint.
+      parameters:
+      - description: user ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: role name
+        in: formData
+        name: role_name
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: int
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errs.ErrResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/errs.ErrResponse'
+      summary: Update name or role for Tamiat User endpoint
 securityDefinitions:
   bearerAuth:
     in: header

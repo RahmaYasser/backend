@@ -40,7 +40,7 @@ type ResetPass struct {
 // @Failure 404  {object}  errs.ErrResponse "User not found"
 // @Failure 401  {object}  errs.ErrResponse "Unauthorizes"
 // @Failure 500  {object}  errs.ErrResponse "Internal server error"
-// @Router /login [post]
+// @Router /tamiatUser/login [post]
 func (receiver TamiatUserHandlers) Login(ctx *gin.Context) {
 	var userObj tamiat_user.TamiatUser
 	var loginRequestData Login
@@ -92,7 +92,7 @@ func (receiver TamiatUserHandlers) Login(ctx *gin.Context) {
 // @Success 200 {object} tamiat_user.TamiatUser
 // @Failure 400  {object}  errs.ErrResponse "Bad Request"
 // @Failure 500  {object}  errs.ErrResponse "Internal server error"
-// @Router /login [post]
+// @Router /tamiatUser/create [post]
 func (receiver TamiatUserHandlers) Create(ctx *gin.Context) {
 	var userObj tamiat_user.TamiatUser
 	var createRequestData CreateTUser
@@ -135,7 +135,7 @@ func (receiver TamiatUserHandlers) Create(ctx *gin.Context) {
 // @Produce application/json
 // @Success 200 {array} tamiat_user.TamiatUser
 // @Failure 500  {object}  errs.ErrResponse "Internal server error"
-// @Router /login [post]
+// @Router /tamiatUser/index [get]
 func (receiver TamiatUserHandlers) ReadAll(ctx *gin.Context) {
 	allUsers, err := receiver.Service.ReadAll()
 	if err != nil {
@@ -154,7 +154,7 @@ func (receiver TamiatUserHandlers) ReadAll(ctx *gin.Context) {
 // @Success 200 {object} tamiat_user.TamiatUser
 // @Failure 400  {object}  errs.ErrResponse "Bad Request"
 // @Failure 500  {object}  errs.ErrResponse "Internal server error"
-// @Router /login [post]
+// @Router /tamiatUser/read/{id} [get]
 func (receiver TamiatUserHandlers) ReadUserByID(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
@@ -180,7 +180,7 @@ func (receiver TamiatUserHandlers) ReadUserByID(ctx *gin.Context) {
 // @Success 200 int id
 // @Failure 400  {object}  errs.ErrResponse "Bad Request"
 // @Failure 500  {object}  errs.ErrResponse "Internal server error"
-// @Router /login [post]
+// @Router /tamiatUser/update/{id} [put]
 func (receiver TamiatUserHandlers) Update(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
@@ -219,7 +219,7 @@ func (receiver TamiatUserHandlers) Update(ctx *gin.Context) {
 // @Success 200 int id
 // @Failure 400  {object}  errs.ErrResponse "Bad Request"
 // @Failure 500  {object}  errs.ErrResponse "Internal server error"
-// @Router /login [post]
+// @Router /tamiatUser/resetpass/{id} [put]
 func (receiver TamiatUserHandlers) ResetPassword(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
@@ -257,7 +257,7 @@ func (receiver TamiatUserHandlers) ResetPassword(ctx *gin.Context) {
 // @Success 200 int id
 // @Failure 400  {object}  errs.ErrResponse "Bad Request"
 // @Failure 500  {object}  errs.ErrResponse "Internal server error"
-// @Router /login [post]
+// @Router /tamiatUser/delete/{id} [delete]
 func (receiver TamiatUserHandlers) Delete(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {

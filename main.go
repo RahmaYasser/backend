@@ -73,6 +73,7 @@ func main() {
 			tamiatUserRoutes.GET("/read/:id", tamiatUserHandler.ReadUserByID)
 			tamiatUserRoutes.PUT("/update/:id", tamiatUserHandler.Update)
 			tamiatUserRoutes.PUT("/resetpass/:id", tamiatUserHandler.ResetPassword)
+			tamiatUserRoutes.DELETE("/delete/:id", tamiatUserHandler.Delete)
 			tamiatUserRoutes.POST("/login", tamiatUserHandler.Login)
 		}
 	}

@@ -129,7 +129,7 @@ func (receiver TamiatUserHandlers) Create(ctx *gin.Context) {
 }
 
 //
-// @Summary ReadAll users endpoint
+// @Summary ReadAll Tamiat Users endpoint
 // @Description Admins only can use this endpoint.
 // @Accept application/json
 // @Produce application/json
@@ -146,7 +146,7 @@ func (receiver TamiatUserHandlers) ReadAll(ctx *gin.Context) {
 }
 
 //
-// @Summary ReadUserByID endpoint
+// @Summary ReadUserByID  for Tamiat User endpoint
 // @Description Admins only can use this endpoint.
 // @Accept application/json
 // @Produce application/json
@@ -170,7 +170,7 @@ func (receiver TamiatUserHandlers) ReadUserByID(ctx *gin.Context) {
 }
 
 //
-// @Summary Update name or role endpoint
+// @Summary Update name or role for Tamiat User endpoint
 // @Description Admins only can use this endpoint.
 // @Consume application/x-www-form-urlencoded
 // @Produce application/json
@@ -210,7 +210,7 @@ func (receiver TamiatUserHandlers) Update(ctx *gin.Context) {
 }
 
 //
-// @Summary ResetPassword endpoint
+// @Summary ResetPassword Tamiat endpoint
 // @Description Admins only can use this endpoint.
 // @Consume application/x-www-form-urlencoded
 // @Produce application/json
@@ -248,6 +248,16 @@ func (receiver TamiatUserHandlers) ResetPassword(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"id": id})
 }
 
+//
+// @Summary Delete Tamiat endpoint
+// @Description Admins only can use this endpoint.
+// @Accept application/json
+// @Produce application/json
+// @Param  id path int true "user ID"
+// @Success 200 int id
+// @Failure 400  {object}  errs.ErrResponse "Bad Request"
+// @Failure 500  {object}  errs.ErrResponse "Internal server error"
+// @Router /login [post]
 func (receiver TamiatUserHandlers) Delete(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {

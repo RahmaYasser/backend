@@ -60,6 +60,11 @@ func (r TamiatUserRepositoryDb) Update(tUserObj TamiatUser) error {
 	_, err := r.db.Exec(sqlStatement, tUserObj.Name, tUserObj.RoleId, tUserObj.Id)
 	return err
 }
+func (r TamiatUserRepositoryDb) ResetPassword(tUserObj TamiatUser) error {
+	sqlStatement := `UPDATE tamiat_users SET password = $1 WHERE id = $2;`
+	_, err := r.db.Exec(sqlStatement, tUserObj.Password, tUserObj.Id)
+	return err
+}
 func (r TamiatUserRepositoryDb) Delete(id int) error {
 	sqlStatement := `DELETE FROM tamiat_users WHERE id = $1;`
 	_, err := r.db.Exec(sqlStatement, id)

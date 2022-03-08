@@ -25,6 +25,9 @@ type UpdateUsr struct {
 	Name string `json:"role" form:"role" binding:"required"`
 	Role string `json:"role_name" form:"role name" binding:"required"`
 }
+type ResetPass struct {
+	NewPass string `json:"new_pass" form:"role" binding:"required"`
+}
 
 //
 // @Summary Login endpoint
@@ -77,7 +80,6 @@ func (receiver TamiatUserHandlers) Login(ctx *gin.Context) {
 	jwtObj := JWT{Token: token}
 	ctx.JSON(http.StatusOK, jwtObj)
 }
-
 func (receiver TamiatUserHandlers) Create(ctx *gin.Context) {
 	var userObj tamiat_user.TamiatUser
 	var createRequestData CreateTUser
@@ -112,7 +114,6 @@ func (receiver TamiatUserHandlers) Create(ctx *gin.Context) {
 	//json.NewEncoder(w).Encode(userObj)
 	ctx.JSON(http.StatusOK, userObj)
 }
-
 func (receiver TamiatUserHandlers) ReadAll(ctx *gin.Context) {
 	allUsers, err := receiver.Service.ReadAll()
 	if err != nil {
@@ -121,11 +122,10 @@ func (receiver TamiatUserHandlers) ReadAll(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, allUsers)
 }
-
 func (receiver TamiatUserHandlers) ReadUserByID(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, errs.ErrParsingID)
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": errs.ErrParsingID.Error()})
 		return
 	}
 	usrObj, err := receiver.Service.ReadUserByID(id)
@@ -135,11 +135,10 @@ func (receiver TamiatUserHandlers) ReadUserByID(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, usrObj)
 }
-
 func (receiver TamiatUserHandlers) Update(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, errs.ErrParsingID)
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": errs.ErrParsingID.Error()})
 		return
 	}
 	var usrObj tamiat_user.TamiatUser
@@ -163,11 +162,37 @@ func (receiver TamiatUserHandlers) Update(ctx *gin.Context) {
 	}
 	ctx.JSON(http.StatusOK, gin.H{"id": id})
 }
-
+func (receiver TamiatUserHandlers) ResetPassword(ctx *gin.Context) {
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": errs.ErrParsingID.Error()})
+		return
+	}
+	var usrObj tamiat_user.TamiatUser
+	usrObj.Id = id
+	var RequestResetPass ResetPass
+	err = ctx.ShouldBind(&RequestResetPass)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": errs.ErrParsingID})
+		return
+	}
+	hash, err := bcrypt.GenerateFromPassword([]byte(RequestResetPass.NewPass), 10)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	usrObj.Password = string(hash)
+	err = receiver.Service.ResetPassword(usrObj)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{"id": id})
+}
 func (receiver TamiatUserHandlers) Delete(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, errs.ErrParsingID)
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": errs.ErrParsingID.Error()})
 		return
 	}
 	err = receiver.Service.Delete(id)

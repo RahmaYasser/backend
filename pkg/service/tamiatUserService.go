@@ -10,6 +10,7 @@ type TamiatUserService interface {
 	ReadAll() ([]tamiat_user.TamiatUser, error)
 	ReadUserByID(id int) (tamiat_user.TamiatUser, error)
 	Update(tUserObj tamiat_user.TamiatUser) error
+	ResetPassword(tUserObj tamiat_user.TamiatUser) error
 	Delete(id int) error
 	GetRoleId(name string) (int, error)
 }
@@ -31,6 +32,9 @@ func (s DefaultTamiatUserService) ReadUserByID(id int) (tamiat_user.TamiatUser, 
 }
 func (s DefaultTamiatUserService) Update(tUserObj tamiat_user.TamiatUser) error {
 	return s.repo.Update(tUserObj)
+}
+func (s DefaultTamiatUserService) ResetPassword(tUserObj tamiat_user.TamiatUser) error {
+	return s.repo.ResetPassword(tUserObj)
 }
 func (s DefaultTamiatUserService) Delete(id int) error {
 	return s.repo.Delete(id)

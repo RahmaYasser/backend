@@ -19,6 +19,7 @@ type TamiatUserRepository interface {
 	ReadAll() ([]TamiatUser, error)
 	ReadUserByID(id int) (TamiatUser, error)
 	Update(tUserObj TamiatUser) error
+	ResetPassword(tUserObj TamiatUser) error
 	Delete(id int) error
 	GetRoleId(name string) (int, error)
 }

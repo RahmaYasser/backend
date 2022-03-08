@@ -40,7 +40,7 @@ func (r TamiatUserRepositoryDb) ReadAll() ([]TamiatUser, error) {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		err = rows.Scan(&tamiatUser.Id, &tamiatUser.CreatedAt, &tamiatUser.UpdtedAt, &tamiatUser.DeletedAt, &tamiatUser.Name, &tamiatUser.Email, &tamiatUser.RoleId)
+		err = rows.Scan(&tamiatUser.Id, &tamiatUser.CreatedAt, &tamiatUser.UpdatedAt, &tamiatUser.DeletedAt, &tamiatUser.Name, &tamiatUser.Email, &tamiatUser.RoleId)
 		tamiatUserArr = append(tamiatUserArr, tamiatUser)
 	}
 	err = rows.Err()
@@ -52,7 +52,7 @@ func (r TamiatUserRepositoryDb) ReadAll() ([]TamiatUser, error) {
 func (r TamiatUserRepositoryDb) ReadUserByID(id int) (TamiatUser, error) {
 	row := r.db.QueryRow(`SELECT id,created_at,updated_at,deleted_at,name,email,role_id FROM tamiat_users WHERE id=$1`, id)
 	var tamiatUser TamiatUser
-	err := row.Scan(&tamiatUser.Id, &tamiatUser.CreatedAt, &tamiatUser.UpdtedAt, &tamiatUser.DeletedAt, &tamiatUser.Name, &tamiatUser.Email, &tamiatUser.RoleId)
+	err := row.Scan(&tamiatUser.Id, &tamiatUser.CreatedAt, &tamiatUser.UpdatedAt, &tamiatUser.DeletedAt, &tamiatUser.Name, &tamiatUser.Email, &tamiatUser.RoleId)
 	return tamiatUser, err
 }
 func (r TamiatUserRepositoryDb) Update(tUserObj TamiatUser) error {

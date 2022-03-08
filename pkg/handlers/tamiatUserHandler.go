@@ -81,7 +81,7 @@ func (receiver TamiatUserHandlers) Login(ctx *gin.Context) {
 }
 
 //
-// @Summary CreateUser endpoint
+// @Summary Create Tamiat User endpoint
 // @Description Provide user info to create new user. Admins only can use this endpoint.
 // @Consume application/x-www-form-urlencoded
 // @Produce application/json
@@ -89,7 +89,7 @@ func (receiver TamiatUserHandlers) Login(ctx *gin.Context) {
 // @Param password formData string true "Password"
 // @Param role_name formData string true "role name"
 // @Param name formData string true "name"
-// @Success 200 {object} handlers.JWT
+// @Success 200 {object} tamiat_user.TamiatUser
 // @Failure 400  {object}  errs.ErrResponse "Bad Request"
 // @Failure 500  {object}  errs.ErrResponse "Internal server error"
 // @Router /login [post]
@@ -127,6 +127,15 @@ func (receiver TamiatUserHandlers) Create(ctx *gin.Context) {
 	//json.NewEncoder(w).Encode(userObj)
 	ctx.JSON(http.StatusOK, userObj)
 }
+
+//
+// @Summary ReadAll users endpoint
+// @Description Admins only can use this endpoint.
+// @Accept application/json
+// @Produce application/json
+// @Success 200 {array} tamiat_user.TamiatUser
+// @Failure 500  {object}  errs.ErrResponse "Internal server error"
+// @Router /login [post]
 func (receiver TamiatUserHandlers) ReadAll(ctx *gin.Context) {
 	allUsers, err := receiver.Service.ReadAll()
 	if err != nil {

@@ -3,14 +3,14 @@ package tamiat_user
 import "github.com/golang/protobuf/ptypes/timestamp"
 
 type TamiatUser struct {
-	Id        int
-	CreatedAt timestamp.Timestamp
-	UpdtedAt  timestamp.Timestamp
-	DeletedAt timestamp.Timestamp
-	Name      string
-	Email     string `json:"email" form:"email" binding:"required,email"`
-	Password  string
-	RoleId    int
+	Id        int                 `json:"id"`
+	CreatedAt timestamp.Timestamp `json:"created_at"`
+	UpdatedAt timestamp.Timestamp `json:"updated_at"`
+	DeletedAt timestamp.Timestamp `json:"deleted_at"`
+	Name      string              `json:"name"`
+	Email     string              `json:"email" form:"email" binding:"required,email"`
+	Password  string              `json:"password"`
+	RoleId    int                 `json:"role_id"`
 }
 
 type TamiatUserRepository interface {

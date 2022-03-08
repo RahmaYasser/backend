@@ -8,6 +8,7 @@ import (
 	"github.com/tamiat/backend/docs"
 	"github.com/tamiat/backend/pkg/domain/contentType"
 	"github.com/tamiat/backend/pkg/domain/role"
+	"github.com/tamiat/backend/pkg/domain/tamiat_user"
 	"github.com/tamiat/backend/pkg/domain/user"
 	"github.com/tamiat/backend/pkg/driver"
 	"github.com/tamiat/backend/pkg/handlers"
@@ -41,7 +42,7 @@ func main() {
 	usertHandler := handlers.UserHandlers{service.NewUserService(user.NewUserRepositoryDb(dbConnection, auth))}
 	roleHandler := handlers.RoleHandlers{service.NewRoleService(role.NewRoleRepositoryDb(sqlDBConnection, auth))}
 	contentTypeHandler := handlers.ContentTypeHandlers{service.NewContentTypeService(contentType.NewContentTypeRepositoryDb(dbConnection, sqlDBConnection, auth))}
-
+	tamiatUserHandler := handlers.TamiatUserHandlers{Service: service.NewTamiatUserService(tamiat_user.NewTamiatUserRepositoryDb(sqlDBConnection, dbConnection))}
 	server := gin.New()
 	server.Use(gin.Recovery(), gin.Logger())
 
@@ -64,6 +65,15 @@ func main() {
 			contentTypeRoutes.PUT("/renamecol/:userId/:contentTypeId", contentTypeHandler.UpdateColName)
 			contentTypeRoutes.PUT("/addcol/:userId/:contentTypeId", contentTypeHandler.AddCol)
 			contentTypeRoutes.PUT("/delcol/:userId/:contentTypeId", contentTypeHandler.DeleteCol)
+		}
+		tamiatUserRoutes := apiRoutes.Group("/tamiatUser")
+		{
+			tamiatUserRoutes.POST("/create", tamiatUserHandler.Create)
+			tamiatUserRoutes.GET("/index", tamiatUserHandler.ReadAll)
+			tamiatUserRoutes.GET("/read/:id", tamiatUserHandler.ReadUserByID)
+			tamiatUserRoutes.PUT("/update/:id", tamiatUserHandler.Update)
+			tamiatUserRoutes.PUT("/resetpass/:id", tamiatUserHandler.ResetPassword)
+			tamiatUserRoutes.POST("/login", tamiatUserHandler.Login)
 		}
 	}
 

@@ -42,3 +42,6 @@ func (s DefaultTamiatUserService) Delete(id int) error {
 func (s DefaultTamiatUserService) GetRoleId(name string) (int, error) {
 	return s.repo.GetRoleId(name)
 }
+func NewTamiatUserService(repository tamiat_user.TamiatUserRepository) DefaultTamiatUserService {
+	return DefaultTamiatUserService{repo: repository}
+}
